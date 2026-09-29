@@ -14,7 +14,7 @@ const FALLBACK_HUBS: FranchiseHub[] = [
     type: "Regional Master Hub",
     tier: "Platinum",
     address: "Salt Lake Sector V, Near College More, Kolkata - 700091",
-    phone: "1800-BROOM-BOOM",
+    phone: "6289952418",
     openHours: "9:00 AM - 8:00 PM",
     isActive: true,
     createdAt: "2026-01-15T09:00:00.000Z",
@@ -26,7 +26,7 @@ const FALLBACK_HUBS: FranchiseHub[] = [
     type: "District Fleet Hub",
     tier: "Gold",
     address: "Hazratganj Main Market, Near Metro Station, Lucknow - 226001",
-    phone: "1800-BROOM-BOOM",
+    phone: "6289952418",
     openHours: "9:30 AM - 7:30 PM",
     isActive: true,
     createdAt: "2026-01-20T10:30:00.000Z",
@@ -38,7 +38,7 @@ const FALLBACK_HUBS: FranchiseHub[] = [
     type: "District Fleet Hub",
     tier: "Gold",
     address: "MI Road, Commercial Hub, Jaipur - 302001",
-    phone: "1800-BROOM-BOOM",
+    phone: "6289952418",
     openHours: "9:00 AM - 8:00 PM",
     isActive: true,
     createdAt: "2026-02-01T11:00:00.000Z",
@@ -50,7 +50,7 @@ const FALLBACK_HUBS: FranchiseHub[] = [
     type: "Express Booking Kiosk",
     tier: "Silver",
     address: "Fraser Road, Near Railway Station Junction, Patna - 800001",
-    phone: "1800-BROOM-BOOM",
+    phone: "6289952418",
     openHours: "8:00 AM - 9:00 PM",
     isActive: true,
     createdAt: "2026-02-10T14:00:00.000Z",
@@ -62,7 +62,7 @@ const FALLBACK_HUBS: FranchiseHub[] = [
     type: "District Fleet Hub",
     tier: "Gold",
     address: "FC Road, Shivajinagar Commercial Complex, Pune - 411005",
-    phone: "1800-BROOM-BOOM",
+    phone: "6289952418",
     openHours: "9:30 AM - 8:00 PM",
     isActive: true,
     createdAt: "2026-02-18T16:00:00.000Z",
@@ -74,7 +74,7 @@ const FALLBACK_HUBS: FranchiseHub[] = [
     type: "District Fleet Hub",
     tier: "Gold",
     address: "Cantt Road, Near Varanasi Junction, Varanasi - 221002",
-    phone: "1800-BROOM-BOOM",
+    phone: "6289952418",
     openHours: "9:00 AM - 8:00 PM",
     isActive: true,
     createdAt: "2026-03-01T12:00:00.000Z",
@@ -121,8 +121,8 @@ export default function StoreLocatorPage() {
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-amber-200 py-3.5 px-4 sm:px-8 shadow-sm">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative w-11 h-11 rounded-full overflow-hidden border-2 border-amber-400 shadow-sm">
-              <Image src="/broomboom-logo.png" alt="BroomBoom Logo" fill className="object-cover" priority />
+            <div className="relative w-11 h-11 rounded-full overflow-hidden border-2 border-amber-400 shadow-sm bg-white shrink-0">
+              <Image src="/broomboom-logo.png" alt="BroomBoom Logo" fill className="object-contain p-0.5" priority />
             </div>
             <div>
               <div className="flex items-center gap-2">

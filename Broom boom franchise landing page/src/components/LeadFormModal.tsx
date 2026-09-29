@@ -72,6 +72,20 @@ export const LeadFormModal: React.FC<LeadFormModalProps> = ({
       const data = await res.json();
       if (data.success && data.data?.applicationId) {
         assignedId = data.data.applicationId;
+        const leadId = data.data?.leadId || "";
+
+        // Immediate redirect to checkout page
+        const queryParams = new URLSearchParams({
+          leadId,
+          appId: assignedId,
+          pkg: formData.preferredPackage,
+          name: formData.fullName,
+          city: formData.city,
+          mobile: formData.mobile,
+          email: formData.email,
+        });
+        window.location.href = `/checkout?${queryParams.toString()}`;
+        return;
       }
     } catch (err) {
       console.error("Backend submission error:", err);
@@ -115,16 +129,16 @@ ${formData.message || "Ready to schedule territory viability call."}
 
 ==================================================
 Submitted via BroomBoom Mobility Technologies Ltd.
-Official Desk: franchise@broomboom.com | Toll-Free: 1800-BROOM-BOOM`;
+Official Desk: support@broomboomcabs.com | Toll-Free: 6289952418`;
 
-    // Construct Mailto Link with CC to sender so sender receives a copy directly through their mobile email app
-    const mailto = `mailto:franchise@broomboom.com?cc=${encodeURIComponent(
+    // Construct Mailto Link with CC to sender
+    const mailto = `mailto:support@broomboomcabs.com?cc=${encodeURIComponent(
       formData.email
     )}&subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
 
     // Construct WhatsApp Link
     const waText = `*New BroomBoom Franchise Application*\n\nRef: ${assignedId}\nName: ${formData.fullName}\nPhone: ${formData.mobile}\nCity: ${formData.city}, ${formData.state}\nPackage: ${formData.preferredPackage.toUpperCase()}\nBudget: ${formData.investmentBudget}`;
-    const whatsapp = `https://api.whatsapp.com/send?phone=919876543210&text=${encodeURIComponent(waText)}`;
+    const whatsapp = `https://api.whatsapp.com/send?phone=916289952418&text=${encodeURIComponent(waText)}`;
 
     setMailtoUrl(mailto);
     setWhatsappUrl(whatsapp);
@@ -139,12 +153,13 @@ Official Desk: franchise@broomboom.com | Toll-Free: 1800-BROOM-BOOM`;
         spread: 75,
         origin: { y: 0.5 },
       });
-    } catch (err) {}
+    } catch (err) {
+      console.error("Confetti error", err);
+    }
 
-    // Automatically trigger the user's mobile mail app
-    try {
-      window.location.href = mailto;
-    } catch (err) {}
+    // NOTE: Removed window.location.href = mailto; here. 
+    // Browsers block redirects triggered after async network requests.
+    // The user will click the link in the Success UI instead.
 
     if (onSuccess) {
       onSuccess(formData as any);
@@ -174,13 +189,13 @@ Official Desk: franchise@broomboom.com | Toll-Free: 1800-BROOM-BOOM`;
                 Application Registered &bull; {applicationId}
               </span>
               <h3 className="text-2xl font-black text-slate-950">
-                Saved &amp; Sent Through Mobile Email!
+                Saved! Action Required
               </h3>
             </div>
 
             <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
               Thank you, <strong className="text-amber-900">{formData.fullName}</strong>. Your franchise application has been{" "}
-              <strong className="text-slate-900">saved in the database</strong>. An email draft with your full application details has been opened in your mobile email app.
+              <strong className="text-slate-900">saved in our system</strong>. Please complete the process by sending us an email or WhatsApp from your device.
             </p>
 
             <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-xs text-amber-950 text-left space-y-2">
@@ -189,7 +204,7 @@ Official Desk: franchise@broomboom.com | Toll-Free: 1800-BROOM-BOOM`;
                 <span>What Happens Next?</span>
               </div>
               <p className="text-[11px] text-slate-600 leading-relaxed">
-                1. Tap <strong>Open Mail App</strong> below if your mobile email did not open automatically.<br />
+                1. Tap <strong>Open Mail App</strong> below to launch your email client.<br />
                 2. Tap <strong>Send</strong> in your mail app — a copy is CC&apos;d directly to <strong>{formData.email}</strong>.<br />
                 3. Our Territory Expansion Manager will call you on <strong>{formData.mobile}</strong> within 24 hours.
               </p>
@@ -199,7 +214,7 @@ Official Desk: franchise@broomboom.com | Toll-Free: 1800-BROOM-BOOM`;
             <div className="pt-2 flex flex-col gap-2.5">
               <a
                 href={mailtoUrl}
-                className="w-full bg-brand-yellow hover:bg-brand-yellow-hover text-black font-black text-xs sm:text-sm py-3 px-4 rounded-xl flex items-center justify-center gap-2 shadow-md transition-all active:scale-95"
+                className="w-full bg-brand-yellow hover:bg-amber-400 text-black font-black text-xs sm:text-sm py-3 px-4 rounded-xl flex items-center justify-center gap-2 shadow-md transition-all active:scale-95"
               >
                 <Mail className="w-4 h-4" />
                 <span>Open Mail App on Mobile &amp; Send</span>
@@ -212,7 +227,7 @@ Official Desk: franchise@broomboom.com | Toll-Free: 1800-BROOM-BOOM`;
                 className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs sm:text-sm py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 shadow-sm transition-all active:scale-95"
               >
                 <MessageCircle className="w-4 h-4" />
-                <span>Send Copy via WhatsApp</span>
+                <span>Send Copy via WhatsApp instead</span>
               </a>
 
               <button
@@ -267,7 +282,7 @@ Official Desk: franchise@broomboom.com | Toll-Free: 1800-BROOM-BOOM`;
                   <input
                     type="tel"
                     required
-                    placeholder="e.g. 9876543210"
+                    placeholder="e.g. 6289952418"
                     value={formData.mobile}
                     onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
                     className="w-full px-3.5 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-300 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:bg-white transition-all"
@@ -403,15 +418,16 @@ Official Desk: franchise@broomboom.com | Toll-Free: 1800-BROOM-BOOM`;
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full mt-2 bg-brand-yellow hover:bg-brand-yellow-hover text-black text-xs sm:text-sm font-black py-3 rounded-xl shadow-md flex items-center justify-center gap-2 group transition-all transform active:scale-95 disabled:opacity-75 cursor-pointer"
+                className="w-full mt-2 bg-brand-yellow hover:bg-amber-400 text-black text-xs sm:text-sm font-black py-3 rounded-xl shadow-md flex items-center justify-center gap-2 group transition-all transform active:scale-95 disabled:opacity-75 cursor-pointer"
+                style={{ backgroundColor: "#FACC15" }} // Adjust yellow hex if needed depending on your tailwind config
               >
                 <Send className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-                <span>{isSubmitting ? "Submitting to Database..." : "Submit Application & Open Mobile Email"}</span>
+                <span>{isSubmitting ? "Submitting to Database..." : "Submit Application"}</span>
               </button>
 
               <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-500 pt-1">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                <span>Instant database registration &bull; Email copy to your mobile</span>
+                <span>Instant database registration</span>
               </div>
             </form>
           </div>

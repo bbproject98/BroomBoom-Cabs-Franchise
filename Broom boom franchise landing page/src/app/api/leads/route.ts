@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { PackageTier } from "@/lib/db/schema";
 import { corsHeaders, handleOptions, jsonResponse } from "@/lib/cors";
 import { saveFranchiseLeadToPostgres } from "@/lib/db/postgres";
+import { sendLeadNotificationEmail } from "@/lib/email";
 
 export async function OPTIONS() {
   return handleOptions();
@@ -76,6 +77,13 @@ export async function POST(request: Request) {
       await saveFranchiseLeadToPostgres(lead);
     } catch (pgErr) {
       console.warn("[POSTGRES WARNING] Could not persist to PostgreSQL:", pgErr);
+    }
+
+    // Send email notification to admin
+    try {
+      await sendLeadNotificationEmail(lead);
+    } catch (mailErr: any) {
+      console.warn("[EMAIL WARNING] Could not send lead notification email:", mailErr.message);
     }
 
     return jsonResponse({

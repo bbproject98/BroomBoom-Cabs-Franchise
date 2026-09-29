@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { handleOptions, jsonResponse } from "@/lib/cors";
+import { sendBrochureNotificationEmail } from "@/lib/email";
 
 export async function OPTIONS() {
   return handleOptions();
@@ -39,6 +40,13 @@ export async function POST(request: Request) {
     });
 
     console.log(`[BACKEND] Brochure Download Logged: ${item.name} (${item.city}, ${item.mobile})`);
+
+    // Send email alert to admin
+    try {
+      await sendBrochureNotificationEmail(item);
+    } catch (mailErr: any) {
+      console.warn("[EMAIL WARNING] Could not send brochure email alert:", mailErr.message);
+    }
 
     return jsonResponse({
       success: true,

@@ -41,7 +41,7 @@ export async function POST(request: Request) {
       type: body.type || "District Fleet Hub",
       tier: body.tier || "Gold",
       address: body.address.trim(),
-      phone: body.phone || "1800-BROOM-BOOM",
+      phone: body.phone || "6289952418",
       openHours: body.openHours || "9:00 AM - 8:00 PM",
       isActive: body.isActive !== undefined ? Boolean(body.isActive) : true,
     });

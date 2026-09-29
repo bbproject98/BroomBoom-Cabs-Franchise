@@ -85,3 +85,35 @@ export interface AdminSession {
   expiresAt: number;
 }
 
+export type PaymentStatus =
+  | "PENDING"
+  | "SUCCESS"
+  | "FAILED"
+  | "USER_DROPPED"
+  | "CANCELLED";
+
+export interface FranchisePayment {
+  id: string;
+  orderId: string;
+  cfOrderId?: string;
+  cfPaymentId?: string;
+  paymentSessionId?: string;
+  leadId?: string;
+  applicationId?: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  packageTier: string;
+  packageName?: string;
+  amount: number;
+  currency: string;
+  status: PaymentStatus;
+  paymentMethod?: string;
+  bankReference?: string;
+  paymentTime?: string;
+  rawResponse?: string;
+  adminNotes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+

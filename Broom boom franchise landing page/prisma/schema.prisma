@@ -9,35 +9,73 @@ generator client {
 
 // Franchise Leads & Finance Leads Core Model
 model FranchiseLead {
-  id                String   @id @default(cuid())
-  applicationId     String   @unique @map("application_id")
-  fullName          String   @map("full_name")
+  id                String             @id @default(cuid())
+  applicationId     String             @unique @map("application_id")
+  fullName          String             @map("full_name")
   mobile            String
-  alternatePhone    String?  @map("alternate_phone")
+  alternatePhone    String?            @map("alternate_phone")
   email             String
   state             String?
   city              String
   pincode           String?
-  proposedAddress   String?  @map("proposed_address")
-  spaceStatus       String?  @map("space_status")
-  carpetArea        String?  @map("carpet_area")
-  preferredPackage  String   @map("preferred_package")
-  packageName       String?  @map("package_name")
-  investmentBudget  String?  @map("investment_budget")
-  financeRequired   String?  @default("Self-Funded") @map("finance_required")
-  loanAssistance    String?  @default("No") @map("loan_assistance")
-  currentProfession String?  @map("current_profession")
-  hasExperience     String?  @map("has_experience")
+  proposedAddress   String?            @map("proposed_address")
+  spaceStatus       String?            @map("space_status")
+  carpetArea        String?            @map("carpet_area")
+  preferredPackage  String             @map("preferred_package")
+  packageName       String?            @map("package_name")
+  investmentBudget  String?            @map("investment_budget")
+  financeRequired   String?            @default("Self-Funded") @map("finance_required")
+  loanAssistance    String?            @default("No") @map("loan_assistance")
+  currentProfession String?            @map("current_profession")
+  hasExperience     String?            @map("has_experience")
   message           String?
-  source            String?  @default("apply_page")
-  status            String   @default("new")
-  adminNotes        String?  @map("admin_notes")
-  createdAt         DateTime @default(now()) @map("created_at")
-  updatedAt         DateTime @updatedAt @map("updated_at")
+  source            String?            @default("apply_page")
+  status            String             @default("new")
+  adminNotes        String?            @map("admin_notes")
+  createdAt         DateTime           @default(now()) @map("created_at")
+  updatedAt         DateTime           @updatedAt @map("updated_at")
+
+  payments          FranchisePayment[]
 
   @@index([status])
   @@index([city])
   @@index([preferredPackage])
   @@index([createdAt(sort: Desc)])
   @@map("franchise_leads")
+}
+
+// Franchise Payments Core Model (Stores Cashfree Orders, Transactions, & Verification Records)
+model FranchisePayment {
+  id               String         @id @default(cuid())
+  orderId          String         @unique @map("order_id")
+  cfOrderId        String?        @map("cf_order_id")
+  cfPaymentId      String?        @map("cf_payment_id")
+  paymentSessionId String?        @map("payment_session_id")
+  leadId           String?        @map("lead_id")
+  applicationId    String?        @map("application_id")
+  customerName     String         @map("customer_name")
+  customerEmail    String         @map("customer_email")
+  customerPhone    String         @map("customer_phone")
+  packageTier      String         @map("package_tier")
+  packageName      String?        @map("package_name")
+  amount           Float
+  currency         String         @default("INR")
+  status           String         @default("PENDING") // PENDING, SUCCESS, FAILED, USER_DROPPED, CANCELLED
+  paymentMethod    String?        @map("payment_method") // UPI, CARD, NETBANKING, etc.
+  bankReference    String?        @map("bank_reference")
+  paymentTime      DateTime?      @map("payment_time")
+  rawResponse      String?        @map("raw_response")
+  adminNotes       String?        @map("admin_notes")
+  createdAt        DateTime       @default(now()) @map("created_at")
+  updatedAt        DateTime       @updatedAt @map("updated_at")
+
+  lead             FranchiseLead? @relation(fields: [leadId], references: [id], onDelete: SetNull)
+
+  @@index([orderId])
+  @@index([cfPaymentId])
+  @@index([applicationId])
+  @@index([leadId])
+  @@index([status])
+  @@index([createdAt(sort: Desc)])
+  @@map("franchise_payments")
 }

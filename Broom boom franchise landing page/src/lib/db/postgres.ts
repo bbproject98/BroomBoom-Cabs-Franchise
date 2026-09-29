@@ -4,7 +4,7 @@ import { FranchiseLead, PackageTier, LeadStatus } from "./schema";
 function getConnectionString(): string {
   return (
     process.env.DATABASE_URL ||
-    "postgresql://postgres:postgres@localhost:5432/postgres?schema=public"
+    "postgresql://durgapuja_user:DURGAPUJA%401%232026@167.71.224.67:5432/durgapuja_db?schema=public"
   );
 }
 
@@ -193,6 +193,56 @@ export async function saveFranchiseLeadToPostgres(
     ];
 
     const result = await client.query(query, values);
+
+    // Also sync to FranchiseLead table format
+    try {
+      await client.query(
+        `INSERT INTO "FranchiseLead" (
+          id, "leadId", "fullName", phone, email, city, state, pincode, address,
+          "franchiseType", "investmentBudget", "currentFleetSize", "hasCommercialOffice",
+          "businessExperience", "preferredLaunchTimeline", status, priority, "assignedTo",
+          "inquiryMessage", "adminNotes", "createdAt", "updatedAt"
+        ) VALUES (
+          $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+          $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22
+        )
+        ON CONFLICT ("leadId") DO UPDATE SET
+          "fullName" = EXCLUDED."fullName",
+          phone = EXCLUDED.phone,
+          email = EXCLUDED.email,
+          city = EXCLUDED.city,
+          status = EXCLUDED.status,
+          "adminNotes" = EXCLUDED."adminNotes",
+          "updatedAt" = EXCLUDED."updatedAt"`,
+        [
+          lead.id,
+          lead.applicationId,
+          lead.fullName,
+          lead.mobile,
+          lead.email || null,
+          lead.city,
+          lead.state || "West Bengal",
+          lead.pincode || null,
+          lead.proposedAddress || null,
+          lead.packageName || `${lead.preferredPackage.toUpperCase()} Partner`,
+          lead.investmentBudget || "Flexible",
+          "None",
+          lead.spaceStatus || (lead.carpetArea ? `${lead.carpetArea} space` : "Planned"),
+          lead.hasExperience || lead.currentProfession || "",
+          "Within 1 Month",
+          lead.status || "NEW",
+          "HIGH",
+          "Franchise Desk",
+          lead.message || "",
+          lead.adminNotes || "",
+          new Date(lead.createdAt),
+          new Date(lead.updatedAt),
+        ]
+      );
+    } catch (e: any) {
+      console.warn("[saveFranchiseLeadToPostgres] FranchiseLead table sync warning:", e.message);
+    }
+
     if (result.rows.length > 0) {
       console.log(
         `[POSTGRES] Successfully stored franchise/finance lead: ${lead.applicationId} - ${lead.fullName} (${lead.city})`

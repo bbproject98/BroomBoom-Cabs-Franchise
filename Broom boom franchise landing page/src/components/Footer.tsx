@@ -16,12 +16,12 @@ export const Footer: React.FC<FooterProps> = ({ onOpenApplyModal, onOpenBrochure
           {/* Col 1: Brand Info with Logo */}
           <div className="lg:col-span-2 space-y-3">
             <Link href="/" className="flex items-center gap-3">
-              <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-brand-yellow shadow-yellow-glow shrink-0">
+              <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-brand-yellow shadow-yellow-glow shrink-0 bg-white">
                 <Image
                   src="/broomboom-logo.png"
                   alt="BroomBoom Logo"
                   fill
-                  className="object-cover"
+                  className="object-contain p-0.5"
                 />
               </div>
               <div>
@@ -139,14 +139,14 @@ export const Footer: React.FC<FooterProps> = ({ onOpenApplyModal, onOpenBrochure
                 className="flex items-center gap-2 hover:text-brand-yellow transition-colors"
               >
                 <Phone className="w-4 h-4 text-brand-yellow shrink-0" />
-                <span>1800-BROOM-BOOM (Toll-Free)</span>
+                <span>6289952418 (Toll-Free)</span>
               </a>
               <a
-                href="mailto:franchise@broomboom.com"
+                href="mailto:broomboomhr@gmail.com"
                 className="flex items-center gap-2 hover:text-brand-yellow transition-colors"
               >
                 <Mail className="w-4 h-4 text-brand-yellow shrink-0" />
-                <span>franchise@broomboom.com</span>
+                <span>broomboomhr@gmail.com</span>
               </a>
               <div className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-brand-yellow shrink-0 mt-0.5" />

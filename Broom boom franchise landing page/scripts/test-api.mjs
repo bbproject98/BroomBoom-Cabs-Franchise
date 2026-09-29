@@ -129,7 +129,7 @@ async function runTests() {
         type: "District Fleet Hub",
         tier: "Gold",
         address: "Sector 17 Market Complex",
-        phone: "1800-BROOM-BOOM",
+        phone: "6289952418",
         openHours: "9:00 AM - 8:00 PM",
       }),
     });

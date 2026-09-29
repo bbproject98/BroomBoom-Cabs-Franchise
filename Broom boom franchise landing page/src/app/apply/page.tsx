@@ -3,7 +3,7 @@
 import React, { useState, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import {
   ArrowLeft,
   Phone,
@@ -15,6 +15,13 @@ import {
   MessageCircle,
   AlertCircle,
   Loader2,
+  Gem,
+  Crown,
+  Building2,
+  Ruler,
+  Percent,
+  Lock,
+  ArrowRight,
 } from "lucide-react";
 import { FRANCHISE_PACKAGES } from "@/data/franchiseData";
 
@@ -33,7 +40,101 @@ const triggerConfetti = async () => {
   }
 };
 
+/* ------------------------------------------------------------------
+   PACKAGE TIER THEMES
+   Silver  → cool slate-gray gradient
+   Gold    → warm amber-to-yellow gradient
+   Platinum→ rich violet-to-purple gradient
+------------------------------------------------------------------ */
+type PackageTheme = {
+  Icon: React.ElementType;
+  cardBg: string;
+  border: string;
+  hoverBorder: string;
+  ring: string;
+  glow: string;
+  iconWrap: string;
+  name: string;
+  tagline: string;
+  price: string;
+  divider: string;
+  label: string;
+  value: string;
+  chip: string;
+  checkBorder: string;
+  ribbon: string;
+};
+
+const PACKAGE_THEMES: Record<string, PackageTheme> = {
+  /* ---------- SILVER : cool slate-gray ---------- */
+  silver: {
+    Icon: Gem,
+    cardBg: "bg-gradient-to-br from-white via-slate-50 to-slate-100",
+    border: "border-slate-300/80",
+    hoverBorder: "hover:border-slate-400",
+    ring: "ring-slate-400/25",
+    glow: "bg-slate-300/70",
+    iconWrap:
+      "border-slate-300 bg-gradient-to-br from-slate-100 to-slate-300 text-slate-700",
+    name: "text-slate-900",
+    tagline: "text-slate-500",
+    price: "text-slate-700",
+    divider: "border-slate-200",
+    label: "text-slate-500",
+    value: "text-slate-900",
+    chip: "bg-slate-100 text-slate-600 group-hover:bg-slate-200",
+    checkBorder: "border-slate-400",
+    ribbon:
+      "bg-gradient-to-r from-slate-500 to-slate-700 text-white",
+  },
+
+  /* ---------- GOLD : warm amber-to-yellow ---------- */
+  gold: {
+    Icon: Crown,
+    cardBg: "bg-gradient-to-br from-amber-50 via-amber-50/60 to-white",
+    border: "border-amber-300/80",
+    hoverBorder: "hover:border-amber-500",
+    ring: "ring-amber-400/30",
+    glow: "bg-amber-300/70",
+    iconWrap:
+      "border-amber-300 bg-gradient-to-br from-amber-100 to-amber-300 text-amber-800",
+    name: "text-slate-950",
+    tagline: "text-amber-700/70",
+    price: "text-amber-700",
+    divider: "border-amber-100",
+    label: "text-amber-800/70",
+    value: "text-slate-900",
+    chip: "bg-amber-100 text-amber-800 group-hover:bg-amber-200",
+    checkBorder: "border-amber-400",
+    ribbon:
+      "bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950",
+  },
+
+  /* ---------- PLATINUM : rich violet-to-purple ---------- */
+  platinum: {
+    Icon: Building2,
+    cardBg: "bg-gradient-to-br from-violet-50 via-purple-50 to-fuchsia-50",
+    border: "border-purple-300/80",
+    hoverBorder: "hover:border-purple-500",
+    ring: "ring-purple-400/30",
+    glow: "bg-purple-300/70",
+    iconWrap:
+      "border-purple-300 bg-gradient-to-br from-violet-200 to-purple-400 text-purple-900",
+    name: "text-purple-950",
+    tagline: "text-purple-700/80",
+    price: "text-purple-700",
+    divider: "border-purple-100",
+    label: "text-purple-700/80",
+    value: "text-purple-950",
+    chip: "bg-purple-100 text-purple-800 group-hover:bg-purple-200",
+    checkBorder: "border-purple-400",
+    ribbon:
+      "bg-gradient-to-r from-violet-600 to-purple-700 text-white",
+  },
+};
+
 function ApplyFormContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const packageParam = searchParams.get("package") || "gold";
 
@@ -140,6 +241,7 @@ Sent from BroomBoom Franchise Application Portal`;
     setIsSubmitting(true);
 
     let assignedId = `BB-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+    let leadId = "";
 
     try {
       const res = await fetch("/api/apply", {
@@ -156,6 +258,7 @@ Sent from BroomBoom Franchise Application Portal`;
       const data = await res.json();
       if (data.success && data.data?.applicationId) {
         assignedId = data.data.applicationId;
+        leadId = data.data.leadId || "";
         setApplicationId(assignedId);
       }
     } catch (err) {
@@ -180,10 +283,22 @@ Sent from BroomBoom Franchise Application Portal`;
 
     setMailtoUrl(mailto);
     setWhatsappUrl(waUrl);
-    setIsSubmitting(false);
-    setIsSuccess(true);
 
+    // Trigger celebratory confetti
     triggerConfetti();
+
+    // Immediately redirect to Checkout Page
+    const queryParams = new URLSearchParams({
+      leadId: leadId || "",
+      appId: assignedId,
+      pkg: selectedPackage,
+      name: formData.fullName,
+      city: formData.city,
+      mobile: formData.mobile,
+      email: formData.email,
+    });
+
+    router.push(`/checkout?${queryParams.toString()}`);
   };
 
   const copySummary = () => {
@@ -198,12 +313,12 @@ Sent from BroomBoom Franchise Application Portal`;
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-amber-200 py-3.5 px-4 sm:px-8 shadow-sm">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative w-11 h-11 rounded-full overflow-hidden border-2 border-amber-400 shadow-sm">
+            <div className="relative w-11 h-11 rounded-full overflow-hidden border-2 border-amber-400 shadow-sm bg-white shrink-0">
               <Image
                 src="/broomboom-logo.png"
                 alt="BroomBoom Logo"
                 fill
-                className="object-cover"
+                className="object-contain p-0.5"
                 priority
               />
             </div>
@@ -228,7 +343,7 @@ Sent from BroomBoom Franchise Application Portal`;
               className="hidden sm:flex items-center gap-2 text-xs font-bold text-slate-700 hover:text-amber-800 transition-colors"
             >
               <Phone className="w-3.5 h-3.5 text-amber-600" />
-              <span>1800-BROOM-BOOM</span>
+              <span>6289952418</span>
             </a>
             <Link
               href="/"
@@ -265,24 +380,35 @@ Sent from BroomBoom Franchise Application Portal`;
             </div>
 
             {/* Direct Action Buttons */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-              <a
-                href={mailtoUrl}
-                className="flex items-center justify-center gap-2 bg-brand-yellow hover:bg-brand-yellow-hover text-black font-extrabold text-sm py-3.5 px-6 rounded-xl shadow-md transition-all"
+            <div className="space-y-3 pt-2">
+              <Link
+                href={`/checkout?appId=${applicationId}&pkg=${selectedPackage}&name=${encodeURIComponent(formData.fullName)}&city=${encodeURIComponent(formData.city)}&mobile=${encodeURIComponent(formData.mobile)}&email=${encodeURIComponent(formData.email)}`}
+                className="w-full flex items-center justify-center gap-2 bg-[#FFDF59] hover:bg-amber-400 text-slate-950 font-black text-sm sm:text-base py-4 px-6 rounded-2xl shadow-md transition-all active:scale-[0.99]"
               >
-                <Mail className="w-4 h-4" />
-                <span>Open Mail & Send Application</span>
-              </a>
+                <Lock className="w-5 h-5" />
+                <span>Proceed to Checkout & Pay ({currentPkgDetails.name})</span>
+                <ArrowRight className="w-5 h-5 ml-1" />
+              </Link>
 
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm py-3.5 px-6 rounded-xl shadow-md transition-all"
-              >
-                <MessageCircle className="w-4 h-4" />
-                <span>Send via WhatsApp (+91)</span>
-              </a>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <a
+                  href={mailtoUrl}
+                  className="flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs sm:text-sm py-3 px-4 rounded-xl shadow-xs transition-all"
+                >
+                  <Mail className="w-4 h-4" />
+                  <span>Open Mail & Send Application</span>
+                </a>
+
+                <a
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm py-3 px-4 rounded-xl shadow-xs transition-all"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  <span>Send via WhatsApp (+91)</span>
+                </a>
+              </div>
             </div>
 
             {/* Copy details block */}
@@ -310,7 +436,7 @@ Sent from BroomBoom Franchise Application Portal`;
               </Link>
               <span>•</span>
               <a href="tel:18002706600" className="hover:text-amber-800 transition-colors flex items-center gap-1 font-semibold">
-                <Phone className="w-3.5 h-3.5" /> Helpline: 1800-BROOM-BOOM
+                <Phone className="w-3.5 h-3.5" /> Helpline: 6289952418
               </a>
             </div>
           </div>
@@ -332,63 +458,154 @@ Sent from BroomBoom Franchise Application Portal`;
             </div>
 
             {/* STEP 1: Select Package */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
+            <div className="space-y-5">
+              <div className="flex flex-wrap items-center justify-between gap-2">
                 <h3 className="text-base sm:text-lg font-black text-slate-950 flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-full bg-brand-yellow text-black font-black text-xs flex items-center justify-center">
+                  <span className="w-6 h-6 rounded-full bg-brand-yellow text-black font-black text-xs flex items-center justify-center shadow-sm">
                     1
                   </span>
                   Select Franchise Package
                 </h3>
-                <span className="text-xs text-amber-800 font-bold">Click card to select</span>
+                <span className="text-xs text-amber-800 font-bold flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                  Click a card to select
+                </span>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch">
                 {FRANCHISE_PACKAGES.map((pkg) => {
                   const isSelected = selectedPackage === pkg.id;
+                  const theme = PACKAGE_THEMES[pkg.id] ?? PACKAGE_THEMES.gold;
+                  const TierIcon = theme.Icon;
+
                   return (
                     <div
                       key={pkg.id}
+                      role="button"
+                      tabIndex={0}
+                      aria-pressed={isSelected}
                       onClick={() => setSelectedPackage(pkg.id)}
-                      className={`cursor-pointer rounded-2xl p-5 border-2 transition-all relative ${
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          setSelectedPackage(pkg.id);
+                        }
+                      }}
+                      className={[
+                        "group relative flex flex-col overflow-hidden rounded-3xl border-2 p-6 text-left",
+                        "cursor-pointer transition-all duration-300 ease-out",
+                        "focus:outline-none focus-visible:ring-4 focus-visible:ring-amber-300/60",
+                        theme.cardBg,
                         isSelected
-                          ? "bg-amber-50/70 border-amber-500 shadow-md ring-2 ring-amber-400/30"
-                          : "bg-white border-slate-200 hover:border-amber-300"
-                      }`}
+                          ? `-translate-y-1.5 border-transparent shadow-[0_28px_55px_-22px_rgba(0,0,0,0.35)] ring-4 ${theme.ring}`
+                          : `${theme.border} shadow-sm hover:-translate-y-1.5 hover:shadow-xl ${theme.hoverBorder}`,
+                      ].join(" ")}
                     >
+                      {/* Selected gradient border overlay */}
+                      {isSelected && (
+                        <div
+                          className={`pointer-events-none absolute inset-0 rounded-3xl border-2 ${
+                            pkg.id === "silver"
+                              ? "border-slate-500"
+                              : pkg.id === "gold"
+                              ? "border-amber-500"
+                              : "border-purple-600"
+                          }`}
+                        />
+                      )}
+
+                      {/* Popular Ribbon */}
                       {pkg.popular && (
-                        <div className="absolute -top-3 right-4 bg-brand-yellow text-black text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-amber-400">
+                        <div
+                          className={`absolute right-0 top-0 z-20 rounded-bl-2xl px-3 py-1.5 text-[10px] font-black uppercase tracking-wider shadow-sm ${theme.ribbon}`}
+                        >
                           ★ Most Popular
                         </div>
                       )}
 
-                      <div className="flex items-center justify-between mb-2">
-                        <h4 className="text-base font-bold text-slate-950">{pkg.name}</h4>
+                      {/* Soft glow blob */}
+                      <div
+                        className={`pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full blur-3xl transition-opacity duration-500 ${theme.glow} ${
+                          isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-70"
+                        }`}
+                      />
+
+                      <div className="relative z-10 flex flex-1 flex-col">
+                        {/* Icon + Check */}
+                        <div className="flex items-start justify-between">
+                          <div
+                            className={`flex h-12 w-12 items-center justify-center rounded-2xl border shadow-sm transition-transform duration-300 group-hover:scale-105 ${theme.iconWrap}`}
+                          >
+                            <TierIcon className="h-6 w-6" strokeWidth={2.2} />
+                          </div>
+
+                          <div
+                            className={`mt-1 flex h-6 w-6 items-center justify-center rounded-full border-2 transition-all duration-300 ${
+                              isSelected
+                                ? pkg.id === "silver"
+                                  ? "scale-110 border-slate-600 bg-slate-600 text-white shadow-sm"
+                                  : pkg.id === "gold"
+                                  ? "scale-110 border-amber-500 bg-amber-500 text-white shadow-sm"
+                                  : "scale-110 border-purple-600 bg-purple-600 text-white shadow-sm"
+                                : `${theme.checkBorder} bg-transparent`
+                            }`}
+                          >
+                            {isSelected && <Check className="h-3.5 w-3.5 stroke-[3.5]" />}
+                          </div>
+                        </div>
+
+                        {/* Name + tagline */}
+                        <h4
+                          className={`mt-4 text-lg font-black tracking-tight ${theme.name}`}
+                        >
+                          {pkg.name}
+                        </h4>
+                        <p className={`mt-0.5 text-[11px] font-medium ${theme.tagline}`}>
+                          {pkg.tagline}
+                        </p>
+
+                        {/* Price */}
                         <div
-                          className={`w-5 h-5 rounded-full border flex items-center justify-center ${
+                          className={`mt-4 text-lg sm:text-xl font-black leading-tight tracking-tight ${theme.price}`}
+                        >
+                          {pkg.investmentRange}
+                        </div>
+
+                        {/* Specs */}
+                        <div
+                          className={`mt-5 space-y-2.5 border-t pt-4 text-[11px] ${theme.divider}`}
+                        >
+                          <div className="flex items-center justify-between gap-2">
+                            <span className={`flex items-center gap-1.5 ${theme.label}`}>
+                              <Ruler className="h-3.5 w-3.5" /> Space
+                            </span>
+                            <span className={`font-bold text-right ${theme.value}`}>
+                              {pkg.spaceRequired}
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between gap-2">
+                            <span className={`flex items-center gap-1.5 ${theme.label}`}>
+                              <Percent className="h-3.5 w-3.5" /> Commission
+                            </span>
+                            <span className="font-bold text-emerald-600 text-right">
+                              {pkg.commissionSlab}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* CTA chip */}
+                        <div
+                          className={`mt-5 rounded-xl px-3 py-2 text-center text-[10px] font-black uppercase tracking-wider transition-all duration-300 ${
                             isSelected
-                              ? "bg-amber-600 border-amber-600 text-white"
-                              : "border-slate-300"
+                              ? pkg.id === "silver"
+                                ? "bg-gradient-to-r from-slate-500 to-slate-700 text-white shadow-sm"
+                                : pkg.id === "gold"
+                                ? "bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 shadow-sm"
+                                : "bg-gradient-to-r from-violet-600 to-purple-700 text-white shadow-sm"
+                              : theme.chip
                           }`}
                         >
-                          {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
-                        </div>
-                      </div>
-
-                      <div className="text-xl font-black text-amber-700">
-                        {pkg.investmentRange}
-                      </div>
-
-                      <p className="text-xs text-slate-500 mt-1">{pkg.tagline}</p>
-
-                      <div className="mt-4 pt-3 border-t border-slate-100 text-[11px] space-y-1 text-slate-600">
-                        <div className="flex justify-between">
-                          <span>Space:</span>
-                          <span className="font-semibold text-slate-900">{pkg.spaceRequired}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>Commission:</span>
-                          <span className="font-semibold text-emerald-600">{pkg.commissionSlab}</span>
+                          {isSelected ? "✓ Selected" : "Select Plan"}
                         </div>
                       </div>
                     </div>
@@ -702,20 +919,21 @@ Sent from BroomBoom Franchise Application Portal`;
                   {isSubmitting ? (
                     <>
                       <Loader2 className="w-5 h-5 animate-spin" />
-                      <span>Saving Application to Database...</span>
+                      <span>Saving & Redirecting to Checkout...</span>
                     </>
                   ) : (
                     <>
-                      <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      <Lock className="w-5 h-5" />
                       <span>
-                        Submit & Apply for {currentPkgDetails.name} (Save & Email)
+                        Apply for {currentPkgDetails.name} & Proceed to Checkout
                       </span>
+                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform ml-1" />
                     </>
                   )}
                 </button>
 
                 <p className="text-xs text-center text-slate-500">
-                  🔒 Data is securely registered in the BroomBoom PostgreSQL Database and Territory Operations Ledger.
+                  🔒 Data is securely registered. You will be redirected directly to Checkout to review plan pricing and pay.
                 </p>
               </div>
             </form>
@@ -726,7 +944,7 @@ Sent from BroomBoom Franchise Application Portal`;
       {/* Footer minimal */}
       <footer className="border-t border-amber-200 py-8 text-center text-xs text-slate-500 bg-white">
         <p>© {new Date().getFullYear()} BroomBoom Mobility Technologies Ltd. All rights reserved.</p>
-        <p className="mt-1">For urgent franchise inquiries: 1800-BROOM-BOOM | franchise@broomboom.com</p>
+        <p className="mt-1">For urgent franchise inquiries: 6289952418 | franchise@broomboom.com</p>
       </footer>
     </div>
   );

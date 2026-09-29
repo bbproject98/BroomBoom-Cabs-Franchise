@@ -78,8 +78,8 @@ BroomBoom is India's fastest-growing multi-vertical mobility and travel ecosyste
 
 4. CONTACT & EXPANSION DESK
 Headquarters: Salt Lake Sector V, Kolkata, India
-Toll-Free Helpline: 1800-BROOM-BOOM
-Email: franchise@broomboom.com
+Toll-Free Helpline: 6289952418
+Email: broomboomhr@gmail.com
 Web: https://broomboom.com`
       ],
       { type: "text/plain;charset=utf-8" }
@@ -120,8 +120,8 @@ Web: https://broomboom.com`
         ) : (
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="relative w-11 h-11 rounded-full overflow-hidden border-2 border-amber-400 shrink-0">
-                <Image src="/broomboom-logo.png" alt="BroomBoom Logo" fill className="object-cover" />
+              <div className="relative w-11 h-11 rounded-full overflow-hidden border-2 border-amber-400 shrink-0 bg-white">
+                <Image src="/broomboom-logo.png" alt="BroomBoom Logo" fill className="object-contain p-0.5" />
               </div>
               <div>
                 <h3 className="text-lg font-black text-slate-950">Download Franchise Kit</h3>
@@ -153,7 +153,7 @@ Web: https://broomboom.com`
                 <input
                   type="tel"
                   required
-                  placeholder="e.g. 9876543210"
+                  placeholder="e.g. 6289952418"
                   value={mobile}
                   onChange={(e) => setMobile(e.target.value)}
                   className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-slate-50 border border-slate-300 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-amber-500"
