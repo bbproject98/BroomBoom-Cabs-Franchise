@@ -135,39 +135,58 @@ export const Footer: React.FC<FooterProps> = ({ onOpenApplyModal, onOpenBrochure
             <h4 className="text-white font-bold text-xs uppercase tracking-wider">Franchise Helpdesk</h4>
             <div className="space-y-2.5 text-xs text-slate-400">
               <a
-                href="tel:18002706600"
+                href="tel:6289952418"
                 className="flex items-center gap-2 hover:text-brand-yellow transition-colors"
               >
                 <Phone className="w-4 h-4 text-brand-yellow shrink-0" />
                 <span>6289952418 (Toll-Free)</span>
               </a>
               <a
-                href="mailto:broomboomhr@gmail.com"
+                href="mailto:support@broomboomcabs.com"
                 className="flex items-center gap-2 hover:text-brand-yellow transition-colors"
               >
                 <Mail className="w-4 h-4 text-brand-yellow shrink-0" />
-                <span>broomboomhr@gmail.com</span>
+                <span>support@broomboomcabs.com</span>
               </a>
               <div className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-brand-yellow shrink-0 mt-0.5" />
-                <span>BroomBoom National HQ, DLF Cyber City, Sector 25, Gurugram, India</span>
+                <span>India</span>
               </div>
             </div>
           </div>
         </div>
+          {/* Disclaimer & Copyright */}
+<div className="pt-4 sm:pt-5 flex flex-col md:flex-row items-center justify-between gap-3 text-[11px] text-slate-500">
+  <p>
+    © {new Date().getFullYear()} BroomBoom Transportation Services Private Limited. All rights reserved.
+  </p>
 
-        {/* Disclaimer & Copyright */}
-        <div className="pt-4 sm:pt-5 flex flex-col md:flex-row items-center justify-between gap-3 text-[11px] text-slate-500">
-          <p>
-            © {new Date().getFullYear()} BroomBoom Mobility Technologies Ltd. All rights reserved.
-          </p>
-          <div className="flex items-center gap-4 text-slate-400">
-            <span className="hover:text-brand-yellow cursor-pointer">Privacy Policy</span>
-            <span>•</span>
-            <span className="hover:text-brand-yellow cursor-pointer">Terms of Franchise</span>
-            <span>•</span>
-            <span className="hover:text-brand-yellow cursor-pointer">Disclaimers</span>
-          </div>
+  <div className="flex items-center gap-4 text-slate-400">
+    <Link
+      href="https://broomboomcabs.com/privacy-policy"
+      className="hover:text-brand-yellow transition-colors"
+    >
+      Privacy Policy
+    </Link>
+
+    <span>•</span>
+
+    <Link
+      href="https://broomboomcabs.com/pilot-terms"
+      className="hover:text-brand-yellow transition-colors"
+    >
+      Terms & Conditions
+    </Link>
+
+    <span>•</span>
+
+    <Link
+      href="#disclaimers"
+      className="hover:text-brand-yellow transition-colors"
+    >
+      Disclaimers
+    </Link>
+  </div>
         </div>
 
         <div className="mt-2.5 text-[10px] text-slate-600 text-center md:text-left">

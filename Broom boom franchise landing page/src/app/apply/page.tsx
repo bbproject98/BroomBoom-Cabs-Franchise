@@ -943,8 +943,8 @@ Sent from BroomBoom Franchise Application Portal`;
 
       {/* Footer minimal */}
       <footer className="border-t border-amber-200 py-8 text-center text-xs text-slate-500 bg-white">
-        <p>© {new Date().getFullYear()} BroomBoom Mobility Technologies Ltd. All rights reserved.</p>
-        <p className="mt-1">For urgent franchise inquiries: 6289952418 | franchise@broomboom.com</p>
+        <p>© {new Date().getFullYear()}  BroomBoom Transportation Services Private Limited.All rights reserved.</p>
+        <p className="mt-1">For urgent franchise inquiries: 6289952418 | support@broomboomcabs.com</p>
       </footer>
     </div>
   );

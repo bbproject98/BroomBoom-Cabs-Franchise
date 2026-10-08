@@ -11,6 +11,33 @@
       "proposedAddress": "",
       "spaceStatus": "Owned commercial space ready",
       "carpetArea": "300 - 500 sq.ft",
+      "preferredPackage": "platinum",
+      "packageName": "Platinum Partner",
+      "investmentBudget": "₹5.0 Lakhs - ₹10.0 Lakhs",
+      "financeRequired": "Self-Funded / Ready Capital",
+      "loanAssistance": "No (Self-Funded)",
+      "currentProfession": "",
+      "hasExperience": "Yes, currently in travel / taxi / logistics",
+      "message": "",
+      "source": "apply_page",
+      "adminNotes": "Application submitted via online portal. Ready for territory manager call.",
+      "id": "lead-1791455656531-nvwby",
+      "applicationId": "BB-2026-1037",
+      "status": "new",
+      "createdAt": "2026-10-08T10:34:16.531Z",
+      "updatedAt": "2026-10-08T10:34:16.531Z"
+    },
+    {
+      "fullName": "Partha Sarkar",
+      "mobile": "08583992978",
+      "alternatePhone": "",
+      "email": "sakarpartha222@gmail.com",
+      "state": "West Bengal",
+      "city": "SINGUR",
+      "pincode": "712124",
+      "proposedAddress": "",
+      "spaceStatus": "Owned commercial space ready",
+      "carpetArea": "300 - 500 sq.ft",
       "preferredPackage": "gold",
       "packageName": "Gold Partner",
       "investmentBudget": "₹5.0 Lakhs - ₹10.0 Lakhs",
@@ -1066,6 +1093,12 @@
     }
   ],
   "auditLogs": [
+    {
+      "id": "log-1791455656531",
+      "action": "LEAD_CREATED",
+      "details": "New application BB-2026-1037 submitted by Partha Sarkar (SINGUR, PLATINUM)",
+      "timestamp": "2026-10-08T10:34:16.531Z"
+    },
     {
       "id": "log-1790685501212",
       "action": "LEAD_UPDATED",

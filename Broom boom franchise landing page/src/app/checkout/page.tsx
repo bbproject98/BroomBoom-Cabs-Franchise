@@ -856,7 +856,7 @@ function CheckoutContent() {
       <footer className="mt-16 border-t border-slate-200/80 py-8 text-center text-xs text-slate-500 bg-white/70 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2 font-bold text-slate-800">
-            <span>BroomBoom Mobility Technologies Ltd.</span>
+            <span>BroomBoom Transportation Services Private Limited</span>
             <span>•</span>
             <span className="text-[11px] text-slate-500 font-normal">Official Franchise Checkout Portal</span>
           </div>
